@@ -1,19 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
+
+// Aqui estamos explicando pro TypeScript o que é um "Jogador"
+type Jogador = {
+  nome: string;
+  placar: number;
+  bolas: number;
+  faltas: number;
+  defesas: number;
+};
 
 export default function ScoutApp() {
-  // Estado (Placar e Estatísticas da Ficha Atual)
-  const [jogadorA, setJogadorA] = useState({ nome: "Felipinho", placar: 0, bolas: 0, faltas: 0, defesas: 0 });
-  const [jogadorB, setJogadorB] = useState({ nome: "Baianinho", placar: 0, bolas: 0, faltas: 0, defesas: 0 });
+  const [jogadorA, setJogadorA] = useState<Jogador>({ nome: "Felipinho", placar: 0, bolas: 0, faltas: 0, defesas: 0 });
+  const [jogadorB, setJogadorB] = useState<Jogador>({ nome: "Baianinho", placar: 0, bolas: 0, faltas: 0, defesas: 0 });
 
-  // Função para adicionar estatísticas
-  const addStat = (jogador, setJogador, stat) => {
-    setJogador({ ...jogador, [stat]: jogador[stat] + 1 });
+  // Funções com as tipagens (o "fiscal" do Vercel adora isso)
+  const addStat = (jogador: Jogador, setJogador: Dispatch<SetStateAction<Jogador>>, stat: keyof Jogador) => {
+    setJogador({ ...jogador, [stat]: (jogador[stat] as number) + 1 });
   };
 
-  // Função para subtrair estatísticas (caso o juiz erre)
-  const subStat = (jogador, setJogador, stat) => {
-    if (jogador[stat] > 0) setJogador({ ...jogador, [stat]: jogador[stat] - 1 });
+  const subStat = (jogador: Jogador, setJogador: Dispatch<SetStateAction<Jogador>>, stat: keyof Jogador) => {
+    if ((jogador[stat] as number) > 0) {
+      setJogador({ ...jogador, [stat]: (jogador[stat] as number) - 1 });
+    }
   };
 
   return (
